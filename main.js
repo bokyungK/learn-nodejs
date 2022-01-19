@@ -146,7 +146,19 @@ var app = http.createServer(function(request,response){
         })
       })
     } else if (pathname === '/delete_process') {
+      var body = '';
+      request.on('data', function(data) {
+        body = body + data;
+      });
+      request.on('end', function() {
+        var post = qs.parse(body);
+        var id = post.id;
 
+        fs.unlink(`data/${id}`, function(error) {
+          response.writeHead(302, {Location: '/'});
+          response.end();
+        });
+      })
     }
     else {
       response.writeHead(404); // 파일을 찾을 수 없을 때
