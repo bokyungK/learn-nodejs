@@ -58,7 +58,12 @@ var app = http.createServer(function(request,response){
             var list = templateList(filelist);
             var template = templateHTML(title, list, `
               <h2>${title}</h2><p>${description}</p>`,`
-              <a href="/create">create</a> <a href="/update?id=${title}">update</a>
+              <a href="/create">create</a>
+              <a href="/update?id=${title}">update</a>
+              <form action="/delete_process" method="post">
+                <input type="hidden" name="id" value="${title}">
+                <input type="submit" value="delete">
+              </form>
               `);
             response.writeHead(200);
             response.end(template);
@@ -73,7 +78,9 @@ var app = http.createServer(function(request,response){
           <form action="/create_process" method="post">
             <p><input type="text" name="title" placeholder="title"></p>
             <p>
-              <textarea name="description" placeholder="description"></textarea>
+              <textarea name="description" placeholder="description"
+              rows="5" cols="100">
+              </textarea>
             </p>
             <p>
               <input type="submit">
@@ -138,7 +145,10 @@ var app = http.createServer(function(request,response){
           })
         })
       })
-    } else {
+    } else if (pathname === '/delete_process') {
+
+    }
+    else {
       response.writeHead(404); // 파일을 찾을 수 없을 때
       response.end('Not fount');
     }
