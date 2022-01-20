@@ -3,6 +3,7 @@ var fs = require('fs');
 var url = require('url'); // url 모듈을 url 변수로 위해 선언
 var qs = require('querystring');
 var template = require('./lib/template.js');
+var path = require('path');
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -24,8 +25,9 @@ var app = http.createServer(function(request,response){
           response.end(html);
         })
       } else {
-        fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description) {
-          fs.readdir('./data', function(error, filelist) {
+        fs.readdir('./data', function(error, filelist) {
+          var filteredId = path.parse(queryData.id).base;
+          fs.readFile(`data/${filteredId}`, 'utf8', function(err, description) {
             var title = queryData.id;
             var list = template.list(filelist);
             var html = template.html(title, list, `
@@ -78,7 +80,8 @@ var app = http.createServer(function(request,response){
         })
       })
     } else if (pathname === '/update') {
-      fs.readFile(`data/${queryData.id}`, 'utf8', function(err, description) {
+      var filteredId = path.parse(queryData.id).base;
+      fs.readFile(`data/${filteredId}`, 'utf8', function(err, description) {
         fs.readdir('./data', function(error, filelist) {
           var title = queryData.id;
           var list = template.list(filelist);
@@ -125,8 +128,9 @@ var app = http.createServer(function(request,response){
       request.on('end', function() {
         var post = qs.parse(body);
         var id = post.id;
+        var filteredId = path.parse(id).base;
 
-        fs.unlink(`data/${id}`, function(error) {
+        fs.unlink(`data/${filteredId}`, function(error) {
           response.writeHead(302, {Location: '/'});
           response.end();
         });
