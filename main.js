@@ -4,6 +4,7 @@ var url = require('url'); // url 모듈을 url 변수로 위해 선언
 var qs = require('querystring');
 var template = require('./lib/template.js');
 var path = require('path');
+var sanitizeHtml = require('sanitize-html');
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -30,12 +31,14 @@ var app = http.createServer(function(request,response){
           fs.readFile(`data/${filteredId}`, 'utf8', function(err, description) {
             var title = queryData.id;
             var list = template.list(filelist);
+            var sanitizedTitle = sanitizeHtml(title);
+            var sanitizedDescription = sanitizeHtml(description);
             var html = template.html(title, list, `
-              <h2>${title}</h2><p>${description}</p>`,`
+              <h2>${sanitizedTitle}</h2><p>${sanitizedDescription}</p>`,`
               <a href="/create">create</a>
-              <a href="/update?id=${title}">update</a>
+              <a href="/update?id=${sanitizedTitle}">update</a>
               <form action="/delete_process" method="post">
-                <input type="hidden" name="id" value="${title}">
+                <input type="hidden" name="id" value="${sanitizedTitle}">
                 <input type="submit" value="delete">
               </form>
               `);
