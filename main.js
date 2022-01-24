@@ -6,7 +6,7 @@ const template = require('./lib/template.js');
 const path = require('path');
 const sanitizeHtml = require('sanitize-html');
 
-const app = http.createServer((request,response) => {
+const app = http.createServer((request, response) => {
     const _url = request.url;
     const queryData = url.parse(_url, true).query;
     let pathname = url.parse(_url, true).pathname
@@ -53,11 +53,10 @@ const app = http.createServer((request,response) => {
         const list = template.list(filelist);
         const html = template.html(title, list, `
           <form action="/create_process" method="post">
-            <p><input type="text" name="title" placeholder="title"></p>
+            <p><input type="text" name="title" placeholder="create title!"></p>
             <p>
-              <textarea name="description" placeholder="description"
-              rows="5" cols="100">
-              </textarea>
+              <textarea name="description" placeholder="create description!"
+              rows="7" cols="30"></textarea>
             </p>
             <p>
               <input type="submit">
